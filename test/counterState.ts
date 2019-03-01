@@ -1,4 +1,4 @@
-import { GlobalState } from "../src/react-gs";
+import { GlobalState } from "../src/react-gstate";
 
 export interface CounterState {
   counterA: number;

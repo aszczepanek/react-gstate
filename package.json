@@ -1,5 +1,5 @@
 {
-  "name": "react-gs",
+  "name": "react-gstate",
   "version": "0.1.0",
   "description": "Allows to create global state classes like native react components with binding to your components state.",
   "keywords": [
@@ -7,16 +7,16 @@
     "state",
     "global"
   ],
-  "main": "dist/react-gs.umd.js",
-  "module": "dist/react-gs.es5.js",
-  "typings": "dist/types/react-gs.d.ts",
+  "main": "dist/react-gstate.umd.js",
+  "module": "dist/react-gstate.es5.js",
+  "typings": "dist/types/react-gstate.d.ts",
   "files": [
     "dist"
   ],
   "author": "Aleksander Szczepanek <aleksander.szczepanek@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aszczepanek/react-gs"
+    "url": "https://github.com/aszczepanek/react-gstate"
   },
   "license": "MIT",
   "engines": {
@@ -32,7 +32,9 @@
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test && npm run lint"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

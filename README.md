@@ -1,4 +1,4 @@
-# react-gs
+# react-gstate
 
 > Allows to create global state classes like native react components with binding to your components state.
 
@@ -23,14 +23,14 @@
 ## Install
 
 ```sh
-$ npm install react-gs
+$ npm install react-gstate
 ```
 
 ## Usage
 
 ```ts
 // AppState.ts
-import { GlobalState } from 'react-gs'
+import { GlobalState } from 'react-gstate'
 
 export interface AppState {
   counterA: number
@@ -208,7 +208,7 @@ I solved all my problems creating my own global state implementation:
 
 Of course redux provides some other things that might be important for
 you, like browser addon for global state debugging and time travel.
-react-gs in the end works similar to redux, it has single point of
+react-gstate in the end works similar to redux, it has single point of
 state change, so it is possible to create such an addon like redux have.
 But unfortunately I don't have time to develop such thing.
 
@@ -226,11 +226,11 @@ static field problem (see redux description).
 
 ## Contributing
 
-Currently whole react-gs fits in two files with less than 150 lines total
+Currently whole react-gstate fits in two files with less than 150 lines total
 so you can easily explore its internals by yourself.
 If you need some specific feature for your own project, you can even
 copy those two files and make changes you need.
-If you have some ideas to improve/extend core react-gs which won't
+If you have some ideas to improve/extend core react-gstate which won't
 complicate it's original form then feel free to create issue/PR.
 
 ## License
