@@ -256,6 +256,8 @@ complicate it's original form then feel free to create issue/PR.
 
 ## Changelog
 
+1.1.1 - Fix readme typo
+
 1.1.0 - Added hooks support
 
 1.0.0 - Initial version
