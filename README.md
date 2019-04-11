@@ -9,6 +9,7 @@
 - [Usage](#usage)
 - [Why another global state library](#why-another-global-state-library)
 - [Contributing](#contributing)
+- [Changelog](#changelog)
 - [License](#License)
 
 ## Key features
@@ -19,6 +20,7 @@
 - **Multiple stores compatible with code splitting**
 - **Zero dependency** (except react of course)
 - **Small and simple**
+- **Support for hooks** - you can use same global state with hooks and class components
 
 ## Install
 
@@ -104,6 +106,24 @@ export class Counter extends React.Component<{}, CounterState> {
   }
 }
 ```
+
+```tsx
+// CounterUsingHooks.tsx
+import React from 'react'
+import { appState } from './AppState'
+
+export function CounterUsingHooks() {
+  const counter = appState.useState(gs => gs.counterA);
+
+  return (
+      <div>
+        <div>
+          Counter: {counter}
+          <button onClick={() => appState.incrementA()}>Increment</button>
+        </div>
+      </div>
+    )
+}
 
 ### Global state class
 
@@ -232,6 +252,12 @@ If you need some specific feature for your own project, you can even
 copy those two files and make changes you need.
 If you have some ideas to improve/extend core react-gstate which won't
 complicate it's original form then feel free to create issue/PR.
+
+## Changelog
+
+1.1.0 - Added hooks support
+
+1.0.0 - Initial version
 
 ## License
 

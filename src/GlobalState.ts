@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { shallowEqual } from './shallowEqual'
+
+/**
+ * GS - Global State
+ * LS - Local State
+ */
 
 type Connectable<S> = React.Component<any, S> | React.PureComponent<any, S>
 type MapStateFn<GS, LS, K extends keyof LS> = (gs: GS) => Pick<LS, K> | LS
+type HookMapState<GS, LS> = (gs: GS) => LS
 
 export class GlobalState<S> {
   connectedItems: { [key: number]: ConnectedItem<S, any, any> } = {}
+  connectedHooks: { [key: number]: ConnectedHook<S, any> } = {}
   state: S
 
   constructor(initState: S) {
@@ -24,12 +31,26 @@ export class GlobalState<S> {
     const connectedItem = new ConnectedItem(target, mapState, this.state)
 
     this.connectedItems[connectedItem.id] = connectedItem
-    this.hookDisconnectOnUnmount(connectedItem)
+    this.interceptUnmountToDisconnect(connectedItem)
 
     return connectedItem.mappedState
   }
 
-  private hookDisconnectOnUnmount(item: ConnectedItem<S, any, any>) {
+  useState<LS>(mapState: HookMapState<S, LS>): LS {
+    const [mappedState, setMappedState] = useState(mapState(this.state));
+    const [connectedHook, setConnectedHook] = useState(() => new ConnectedHook(mappedState, mapState, setMappedState));
+
+    useEffect(() => {
+      this.connectedHooks[connectedHook.id] = connectedHook;
+      return () => {
+        delete this.connectedHooks[connectedHook.id];
+      }
+    }, []);
+
+    return mappedState;
+  }
+
+  private interceptUnmountToDisconnect(item: ConnectedItem<S, any, any>) {
     const prevUnmount = item.target.componentWillUnmount
 
     item.target.componentWillUnmount = () => {
@@ -46,10 +67,41 @@ export class GlobalState<S> {
     for (let key in this.connectedItems) {
       this.connectedItems[key].processNewGlobaleState(this.state)
     }
+    for (let key in this.connectedHooks) {
+      this.connectedHooks[key].processNewGlobaleState(this.state)
+    }
   }
 }
 
 let connectedItemIdGen = 1
+
+class ConnectedHook<GS, LS> {
+  id = connectedItemIdGen++
+
+  constructor(public mappedState: LS, public mapStateFn: HookMapState<GS, LS>, public setMappedStateFn: React.Dispatch<React.SetStateAction<LS>>) {
+  }
+
+  processNewGlobaleState(gs: GS) {
+    const newMappedState = this.evaluateMapState(gs)
+    if (!newMappedState) return
+    if (shallowEqual(this.mappedState, newMappedState)) return
+
+    this.mappedState = newMappedState
+    this.setMappedStateFn(this.mappedState)
+  }
+
+  private evaluateMapState(gs: GS) {
+    try {
+      return this.mapStateFn(gs)
+    } catch (e) {
+      console.error(
+        'Error in map global state function for hook '
+      )
+      console.error(e)
+      return undefined
+    }
+  }
+}
 
 class ConnectedItem<GS, LS, K extends keyof LS> {
   id = connectedItemIdGen++
