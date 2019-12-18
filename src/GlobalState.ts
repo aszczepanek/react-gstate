@@ -14,6 +14,7 @@ export class GlobalState<S> {
   connectedItems: { [key: number]: ConnectedItem<S, any, any> } = {}
   connectedHooks: { [key: number]: ConnectedHook<S, any> } = {}
   state: S
+  defaultMapState: HookMapState<S, S> = gs => gs
 
   constructor(initState: S) {
     this.state = initState
@@ -36,18 +37,23 @@ export class GlobalState<S> {
     return connectedItem.mappedState
   }
 
-  useState<LS>(mapState: HookMapState<S, LS>): LS {
-    const [mappedState, setMappedState] = useState(mapState(this.state));
-    const [connectedHook, setConnectedHook] = useState(() => new ConnectedHook(mappedState, mapState, setMappedState));
+  useState(mapState?: undefined): S
+  useState<LS>(mapState: HookMapState<S, LS>): LS
+  useState<LS>(mapState?: HookMapState<S, LS>): LS | S {
+    const mapStateFn = mapState || this.defaultMapState
+    const [mappedState, setMappedState] = useState(mapStateFn(this.state))
+    const [connectedHook, setConnectedHook] = useState(
+      () => new ConnectedHook(mappedState, mapStateFn, setMappedState)
+    )
 
     useEffect(() => {
-      this.connectedHooks[connectedHook.id] = connectedHook;
+      this.connectedHooks[connectedHook.id] = connectedHook
       return () => {
-        delete this.connectedHooks[connectedHook.id];
+        delete this.connectedHooks[connectedHook.id]
       }
-    }, []);
+    }, [])
 
-    return mappedState;
+    return mappedState
   }
 
   private interceptUnmountToDisconnect(item: ConnectedItem<S, any, any>) {
@@ -78,8 +84,11 @@ let connectedItemIdGen = 1
 class ConnectedHook<GS, LS> {
   id = connectedItemIdGen++
 
-  constructor(public mappedState: LS, public mapStateFn: HookMapState<GS, LS>, public setMappedStateFn: React.Dispatch<React.SetStateAction<LS>>) {
-  }
+  constructor(
+    public mappedState: LS,
+    public mapStateFn: HookMapState<GS, LS>,
+    public setMappedStateFn: React.Dispatch<React.SetStateAction<LS>>
+  ) {}
 
   processNewGlobaleState(gs: GS) {
     const newMappedState = this.evaluateMapState(gs)
@@ -94,9 +103,7 @@ class ConnectedHook<GS, LS> {
     try {
       return this.mapStateFn(gs)
     } catch (e) {
-      console.error(
-        'Error in map global state function for hook '
-      )
+      console.error('Error in map global state function for hook ')
       console.error(e)
       return undefined
     }

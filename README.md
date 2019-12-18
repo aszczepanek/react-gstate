@@ -256,6 +256,8 @@ complicate it's original form then feel free to create issue/PR.
 
 ## Changelog
 
+1.2.0 - Support optional useState mapState function parameter which defaults to identity map function returning whole state.
+
 1.1.1 - Fix readme typo
 
 1.1.0 - Added hooks support

@@ -15,7 +15,7 @@ beforeEach(() => {
 })
 
 interface MockProps {
-  mapFn: (gs: CounterState) => any
+  mapFn?: (gs: CounterState) => any
 }
 
 function MockFnComponent(props: MockProps) {
@@ -35,6 +35,18 @@ describe('GlobalState hooks interface', () => {
 
     expect(result).toBeDefined()
     expect(result).toMatchObject({ counter: initState.counterA })
+    expect(renderCount).toBe(1)
+  })
+
+  it('mapped default state', () => {
+    TestRenderer.act(() => {
+      TestRenderer.create(<MockFnComponent mapFn={undefined} />)
+    })
+
+    const result = fnComponentLastState
+
+    expect(result).toBeDefined()
+    expect(result).toBe(initState)
     expect(renderCount).toBe(1)
   })
 
@@ -133,13 +145,13 @@ describe('GlobalState hooks interface', () => {
       TestRenderer.create(<MockFnComponent mapFn={gs => gs.counterA} />)
     })
 
-    expect(fnComponentLastState).toBe(initState.counterA);
+    expect(fnComponentLastState).toBe(initState.counterA)
 
     TestRenderer.act(() => {
       store.setState({ counterA: 20 })
     })
 
-    expect(fnComponentLastState).toBe(20);
+    expect(fnComponentLastState).toBe(20)
     expect(renderCount).toBe(2)
   })
 
@@ -148,13 +160,13 @@ describe('GlobalState hooks interface', () => {
       TestRenderer.create(<MockFnComponent mapFn={gs => gs.counterA} />)
     })
 
-    expect(fnComponentLastState).toBe(initState.counterA);
+    expect(fnComponentLastState).toBe(initState.counterA)
 
     TestRenderer.act(() => {
       store.setState({ counterA: initState.counterA })
     })
 
-    expect(fnComponentLastState).toBe(initState.counterA);
+    expect(fnComponentLastState).toBe(initState.counterA)
     expect(renderCount).toBe(1)
   })
 
@@ -163,13 +175,13 @@ describe('GlobalState hooks interface', () => {
       TestRenderer.create(<MockFnComponent mapFn={gs => gs.counterA} />)
     })
 
-    expect(fnComponentLastState).toBe(initState.counterA);
+    expect(fnComponentLastState).toBe(initState.counterA)
 
     TestRenderer.act(() => {
       store.setState({ counterB: 20 })
     })
 
-    expect(fnComponentLastState).toBe(initState.counterA);
+    expect(fnComponentLastState).toBe(initState.counterA)
     expect(renderCount).toBe(1)
   })
 })
