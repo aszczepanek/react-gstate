@@ -20,7 +20,7 @@ interface MockProps {
 
 function MockFnComponent(props: MockProps) {
   renderCount++
-  fnComponentLastState = store.useState(props.mapFn as any)
+  fnComponentLastState = store.useGlobalState(props.mapFn as any)
 
   return <span>{JSON.stringify(fnComponentLastState)}</span>
 }

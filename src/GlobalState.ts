@@ -37,9 +37,9 @@ export class GlobalState<S> {
     return connectedItem.mappedState
   }
 
-  useState(mapState?: undefined): S
-  useState<LS>(mapState: HookMapState<S, LS>): LS
-  useState<LS>(mapState?: HookMapState<S, LS>): LS | S {
+  useGlobalState(mapState?: undefined): S
+  useGlobalState<LS>(mapState: HookMapState<S, LS>): LS
+  useGlobalState<LS>(mapState?: HookMapState<S, LS>): LS | S {
     const mapStateFn = mapState || this.defaultMapState
     const [mappedState, setMappedState] = useState(mapStateFn(this.state))
     const [connectedHook, setConnectedHook] = useState(
