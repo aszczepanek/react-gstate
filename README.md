@@ -255,6 +255,7 @@ If you have some ideas to improve/extend core react-gstate which won't
 complicate it's original form then feel free to create issue/PR.
 
 ## Changelog
+1.2.1 - Fix notify when using map to primitive value during evaluation to falsy value.
 
 1.2.0 - Support optional useState mapState function parameter which defaults to identity map function returning whole state.
 

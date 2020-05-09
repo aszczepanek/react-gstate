@@ -20,7 +20,7 @@ interface MockProps {
 
 function MockFnComponent(props: MockProps) {
   renderCount++
-  fnComponentLastState = store.useState(props.mapFn)
+  fnComponentLastState = store.useState(props.mapFn as any)
 
   return <span>{JSON.stringify(fnComponentLastState)}</span>
 }
@@ -152,6 +152,21 @@ describe('GlobalState hooks interface', () => {
     })
 
     expect(fnComponentLastState).toBe(20)
+    expect(renderCount).toBe(2)
+  })
+
+  it('map global state to primitive value and set falsy value', () => {
+    TestRenderer.act(() => {
+      TestRenderer.create(<MockFnComponent mapFn={gs => gs.counterA} />)
+    })
+
+    expect(fnComponentLastState).toBe(initState.counterA)
+
+    TestRenderer.act(() => {
+      store.setState({ counterA: 0 })
+    })
+
+    expect(fnComponentLastState).toBe(0)
     expect(renderCount).toBe(2)
   })
 

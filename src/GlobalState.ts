@@ -91,12 +91,16 @@ class ConnectedHook<GS, LS> {
   ) {}
 
   processNewGlobaleState(gs: GS) {
-    const newMappedState = this.evaluateMapState(gs)
-    if (!newMappedState) return
-    if (shallowEqual(this.mappedState, newMappedState)) return
+    try {
+      const newMappedState = this.evaluateMapState(gs)
+      if (shallowEqual(this.mappedState, newMappedState)) return
 
-    this.mappedState = newMappedState
-    this.setMappedStateFn(this.mappedState)
+      this.mappedState = newMappedState
+      this.setMappedStateFn(this.mappedState)
+    } catch (e) {
+      console.error('Error during processing new global state')
+      console.error(e)
+    }
   }
 
   private evaluateMapState(gs: GS) {
@@ -105,7 +109,7 @@ class ConnectedHook<GS, LS> {
     } catch (e) {
       console.error('Error in map global state function for hook ')
       console.error(e)
-      return undefined
+      throw e
     }
   }
 }
