@@ -113,7 +113,7 @@ import React from 'react'
 import { appState } from './AppState'
 
 export function CounterUsingHooks() {
-  const counter = appState.useState(gs => gs.counterA);
+  const counter = appState.useGlobalState(gs => gs.counterA);
 
   return (
       <div>
@@ -255,6 +255,8 @@ If you have some ideas to improve/extend core react-gstate which won't
 complicate it's original form then feel free to create issue/PR.
 
 ## Changelog
+2.0.1 - Fix hook example (renamed useState to useGlobalState)
+
 2.0.0 - Breaking change: rename useState to useGlobalState to fix error in react dev tools.
 
 1.2.1 - Fix notify when using map to primitive value during evaluation to falsy value.

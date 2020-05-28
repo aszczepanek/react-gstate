@@ -1,6 +1,6 @@
 {
   "name": "react-gstate",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Allows to create global state classes like native react components with binding to your components state.",
   "keywords": [
     "react",
