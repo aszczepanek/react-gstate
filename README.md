@@ -255,6 +255,8 @@ If you have some ideas to improve/extend core react-gstate which won't
 complicate it's original form then feel free to create issue/PR.
 
 ## Changelog
+2.0.2 - Fix notify when using map primitive value during evaluation to falsy value
+
 2.0.1 - Fix hook example (renamed useState to useGlobalState)
 
 2.0.0 - Breaking change: rename useState to useGlobalState to fix error in react dev tools.
